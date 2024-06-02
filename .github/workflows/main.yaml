@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Go
+      id: setup-go
+      run: |
+        if ! command -v go &> /dev/null
+        then
+          echo "Go is not installed. Installing the latest version of Go..."
+          curl -sSfL https://dl.google.com/go/go1.19.3.linux-amd64.tar.gz -o go.tar.gz
+          sudo tar -C /usr/local -xzf go.tar.gz
+          echo "export PATH=\$PATH:/usr/local/go/bin" >> $GITHUB_ENV
+        else
+          echo "Go is already installed."
+        fi
+
+    - name: Set up Rust
+      id: setup-rust
+      run: |
+        if ! command -v rustc &> /dev/null
+        then
+          echo "Rust is not installed. Installing the latest version of Rust..."
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+        else
+          echo "Rust is already installed."
+        fi
+
+    - name: Export PATH for Go
+      run: echo "/usr/local/go/bin" >> $GITHUB_PATH
+
+    - name: Install make
+      run: sudo apt-get update && sudo apt-get install -y make
+
+    - name: Build code
+      run: | 
+        make build
+    
+    - name : Run code
+      run: |
+        make run

@@ -1,0 +1,13 @@
+[package]
+name = "second"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+# bindgen = "*"
+
+[build-dependencies]
+bindgen = "*"
+[build]
+rustc-link-search = ["."]
+rustc-link-lib = ["fibonacci"]
