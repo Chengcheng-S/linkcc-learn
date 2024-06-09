@@ -15,7 +15,7 @@ fn main() {
 
     println!("run snark verify");
 
-    unsafe{
-        bind::Snark_run();
-    }
+    // unsafe{
+        // bind::Snark_run();
+    // }
 }
